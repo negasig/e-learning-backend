@@ -1,15 +1,11 @@
 package com.elearning.elearning.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.elearning.elearning.Repository.StudentRepository;
 import com.elearning.elearning.Repository.TeacherRepo;
@@ -44,16 +40,39 @@ public class Controller {
 	}
 	@PostMapping("/adduser")
 	public Object adduser(@RequestBody User user ){
-		return urepo.save(user);
-		
-	}
-	@PostMapping("/login")
-	public boolean login(@RequestBody User us  ) {
-		if(us.getUsername().contains("negasi")) {
-			return true;
+		List<User> us=urepo.findByUsername(user.getUsername());
+		if(us.size()==0){
+			return urepo.save(user);
 		}
- 
-     return false;
+
+		return "user exists";
+	}
+	@DeleteMapping("/deletestud/{id}")
+	public String deletStud(@PathVariable int id){
+   stdrepo.deleteById(id);
+   return  "student with id: " +id+ "has been deleted";
+	}
+	@PutMapping("/updateStud/{id}")
+		public Object updateStudent(@RequestBody Student  std, @PathVariable int id){
+			Student st=stdrepo.findById(id).get();
+			st.setFirstname(std.getFirstname());
+			st.setLastname(std.getLastname());
+			st.setAge(std.getAge());
+			st.setDepartment(std.getDepartment());
+			st.setGrade(std.getGrade());
+
+			return stdrepo.save(st);
+		}
+
+	@PostMapping("/login")
+	public Boolean login(@RequestBody User us ) {
+		List<User> user=urepo.findByUsername(us.getUsername());
+		if((user.size()==1) && user.get(0).getUsername().equals(us.getUsername())){
+			return true;
+
+		}
+		return false;
 	}
 	
 }
+

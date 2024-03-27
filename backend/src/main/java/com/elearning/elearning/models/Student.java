@@ -15,6 +15,9 @@ public class Student {
 	private Integer id;
 	private String firstname;
 	private String lastname;
+	private String department;
+	private Double grade;
+	private int age;
 	public String getFirstname() {
 		return firstname;
 	}
@@ -27,9 +30,7 @@ public class Student {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-	private String department;
-	private Double grade;
-	private int age;
+
 	public Integer getId() {
 		return id;
 	}
